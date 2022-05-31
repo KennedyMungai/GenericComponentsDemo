@@ -1,5 +1,43 @@
-﻿<h3>GenericComponent</h3>
+﻿@typeparam TItem
+
+<div class="">
+    @DisplayMessage
+</div>
 
 @code {
+    //The generic item we are working with
+    [Parameter]
+    public TItem? Item {get; set;}
 
+    //Name of the property on display
+    [Parameter]
+    public string? TextPropertyName {get; set;}
+
+    //Name of the property to treat as a value
+    [Parameter]
+    public string ValuePropertyName {get; set;}
+
+    string DisplayMessage{
+        get
+        {
+            //Get a type from TItem
+            Type t = typeof(TItem);
+
+            //Get the type's name: Person
+            string name = t.Name;
+
+            //Get the text PropertyInfo object using System.Reflection
+            var textProperty = t.GetProperty(TextPropertyName);
+
+            //Read the value of the item object's text property
+            string text = textProperty.GetValue(Item).ToString();
+
+            //Do the same for the value property
+            var valueProperty = t.GetProperty(ValuePropertyName);
+            string value = valueProperty.GetValue(Item).ToString();
+
+            //Display a string
+            return $"The {name} object's {ValuePropertyName} value is {value} and it's {TextPropertyName} value is {text}";
+        }
+    }
 }
